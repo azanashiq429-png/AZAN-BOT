@@ -1,0 +1,18 @@
+{
+  "name": "azan-vip-bot",
+  "version": "1.0.0",
+  "description": "Premium Web Control Panel for AZAN VIP BOT",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.6.0",
+    "express": "^4.19.2",
+    "pino": "^8.20.0",
+    "qrcode": "^1.5.3",
+    "socket.io": "^4.7.5"
+  },
+  "author": "AZAN TOOLS",
+  "license": "MIT"
+}
