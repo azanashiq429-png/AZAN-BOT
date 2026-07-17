@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZAN VIP BOT - Ultra Premium Control Panel</title>
+    <!-- Google Fonts for Futuristic Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Link to Separate Style Sheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- EMBEDDED STYLES FOR THE GLOWING PRO TAB -->
+    <style>
+        :root {
+            --gold-glow: #ffd700;
+            --gold-gradient: linear-gradient(135deg, #ffe066 0%, #f5b041 100%);
+            --bronze-gradient: linear-gradient(135deg, #cd7f32 0%, #b87333 100%);
+            --diamond-gradient: linear-gradient(135deg, #e0f7fa 0%, #80deea 100%);
+        }
+        
+        /* Pricing Cards Container */
+        .pricing-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 15px;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+        
+        /* Premium Card Design */
+        .pro-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Popular/Featured Card Glow */
+        .pro-card.featured {
+            border: 1.5px solid rgba(245, 176, 65, 0.4);
+            box-shadow: 0 10px 30px rgba(245, 176, 65, 0.15);
+        }
+        
+        .pro-card.featured::before {
+            content: "POPULAR / BEST VALUE";
+            position: absolute;
+            top: 12px;
+            right: -35px;
+            background: var(--gold-gradient);
+            color: #000;
+            font-size: 8px;
+            font-weight: 900;
+            padding: 4px 35px;
+            transform: rotate(45deg);
+            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .plan-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 12px;
+        }
+
+        .badge-bronze { background: rgba(205, 127, 50, 0.15); color: #e59866; border: 1px solid rgba(205, 127, 50, 0.3); }
+        .badge-gold { background: rgba(245, 176, 65, 0.15); color: #f5b041; border: 1px solid rgba(245, 176, 65, 0.3); }
+        .badge-diamond { background: rgba(128, 222, 234, 0.15); color: #80deea; border: 1px solid rgba(128, 222, 234, 0.3); }
+
+        .plan-price-box {
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .plan-price {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        .plan-currency {
+            font-size: 16px;
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .plan-duration {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* Feature List in Pro Cards */
+        .pro-feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .pro-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+        .pro-feature-item svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        /* Buy Buttons */
+        .btn-buy-pro {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 12px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-bronze { background: var(--bronze-gradient); color: #fff; box-shadow: 0 4px 15px rgba(184, 115, 51, 0.2); }
+        .btn-gold { background: var(--gold-gradient); color: #000; box-shadow: 0 4px 15px rgba(245, 176, 65, 0.3); }
+        .btn-diamond { background: var(--diamond-gradient); color: #000; box-shadow: 0 4px 15px rgba(128, 222, 234, 0.3); }
+
+        .btn-buy-pro:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- GLOWING TOP HEADER -->
+        <header>
+            <div class="brand-info">
+                <div class="logo-glow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M5.52.359A.5.5 0 0 1 6 0h4a.5.5 0 0 1 .474.658L8.694 6H12.5a.5.5 0 0 1-.395.807l-7 9a.5.5 0 0 1-.873-.454L6.823 9.5H3.5a.5.5 0 0 1-.48-.641l2.5-8.5z"/>
+                    </svg>
+                </div>
+                <div class="brand-title">
+                    <h1>AZAN VIP BOT</h1>
+                    <p>Next-Gen Control Panel</p>
+                </div>
+            </div>
+            <div class="status-badge" id="botStatus">ONLINE</div>
+        </header>
+
+        <!-- PREMIUM SPONSORED ADS SYSTEM -->
+        <div class="ad-container">
+            <span class="ad-label">Sponsored Ad</span>
+            <div class="ad-text">
+                <h4>🚀 Fast Connection Server Pro</h4>
+                <p>Unlock lightning speed connections & lower pings instantly.</p>
+            </div>
+            <a href="https://example.com" target="_blank" class="ad-action-btn">Install</a>
+        </div>
+
+        <!-- ==================== TAB 1: DASHBOARD ==================== -->
+        <div id="dashboard-tab" class="tab-content active-tab">
+            <div class="wa-dashboard-card">
+                <!-- Heavy WhatsApp Header Style -->
+                <div class="wa-accent-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="width: 18px; height: 18px; fill: currentColor;">
+                        <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.7-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+                    </svg>
+                    <span>WHATSAPP INTEGRATION ENGINE</span>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid-classic">
+                    <div class="stat-bubble">
+                        <h3>99.9%</h3>
+                        <p>Uptime</p>
+                    </div>
+                    <div class="stat-bubble">
+                        <h3>150ms</h3>
+                        <p>Latency</p>
+                    </div>
+                    <div class="stat-bubble">
+                        <h3>V5.0</h3>
+                        <p>Engine</p>
+                    </div>
+                </div>
+
+                <!-- ================= AZAN VIP ENGINE CONNECT ================= -->
+                <div class="feature-category" style="margin-top: 20px; border: 1px solid rgba(0,229,255,0.15); background: rgba(10,25,41,0.5); padding: 15px; border-radius: 16px;">
+                    <div class="category-header" style="margin-bottom: 12px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyber-blue, #00e5ff)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; margin-right: 8px;">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        <span>AZAN VIP ENGINE CONNECT</span>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 15px; align-items: center; justify-content: center;">
+                        
+                        <!-- Radar / QR Placeholder -->
+                        <div class="qr-placeholder" style="width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02); border: 2px dashed rgba(0,229,255,0.25); border-radius: 20px; position: relative; overflow: hidden; box-shadow: inset 0 0 15px rgba(0,229,255,0.05);">
+                            <span id="displayPlaceholder" style="color: var(--text-muted); font-size: 11px; text-align: center; padding: 10px; font-family: 'Plus Jakarta Sans', sans-serif;">No Connection Started</span>
+                        </div>
+
+                        <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+                            <input type="text" id="waNumberInput" placeholder="Enter Number (e.g. 923001234567)" style="width: 100%; padding: 12px; border-radius: 12px; background: #182330; border: 1px solid rgba(0,229,255,0.2); color: #fff; font-family: inherit; font-size: 14px; outline: none; text-align: center; transition: all 0.3s; box-shadow: 0 0 5px rgba(0,229,255,0.05);" onfocus="this.style.borderColor='var(--cyber-blue)'" onblur="this.style.borderColor='rgba(0,229,255,0.2)'">
+                            
+                            <div style="display: flex; gap: 10px; width: 100%;">
+                                <button onclick="startVipEngine()" style="flex: 1; padding: 12px; background: #2ecc71; border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; font-family: inherit; transition: 0.3s; box-shadow: 0 4px 10px rgba(46,204,113,0.2);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Scan QR Code</button>
+                                <button onclick="startPairingEngine()" style="flex: 1; padding: 12px; background: var(--cyber-blue, #00e5ff); border: none; border-radius: 12px; color: #111; font-weight: bold; cursor: pointer; font-family: inherit; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,229,255,0.2);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Get Pairing Code</button>
+                            </div>
+                        </div>
+
+                        <span id="streamStatusText" style="font-size: 12px; color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px;">System Idle...</span>
+                    </div>
+                </div>
+
+                <!-- FEATURES CONTAINER START -->
+                <div class="features-container" style="margin-top: 25px;">
+
+                    <!-- ================= 1. PRIVACY & BYPASS FEATURES ================= -->
+                    <div class="feature-category">
+                        <div class="category-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                            <span>Privacy & Bypass Features</span>
+                        </div>
+                        
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Anti Delete Messages</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="antiDeleteToggle" onchange="handleToggleChange('antiDelete', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Auto Status Seen</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="autoStatusSeenToggle" onchange="handleToggleChange('autoStatusSeen', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Auto Status React</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="autoStatusReactToggle" onchange="handleToggleChange('autoStatusReact', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#f1c40f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Anti View Once</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="antiViewOnceToggle" onchange="handleToggleChange('antiViewOnce', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#e67e22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"/>
+                                            <line x1="23" y1="1" x2="1" y2="23"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Anti Call On/Off</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="antiCallToggle" onchange="handleToggleChange('antiCall', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none">
+                                            <circle cx="12" cy="12" r="8" fill="#2ecc71" />
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Always Online</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="alwaysOnlineToggle" onchange="handleToggleChange('alwaysOnline', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                            <circle cx="9" cy="7" r="4"/>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Public/Private Inbox Mod</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="inboxModToggle" onchange="handleToggleChange('alwaysOnline', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                            <circle cx="9" cy="7" r="4"/>
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Public/Private Inbox Mod</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="inboxModToggle" onchange="handleToggleChange('inboxMod', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= 2. AUTOMATION & ENGAGEMENT ================= -->
+                    <div class="feature-category">
+                        <div class="category-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="10" rx="2"/>
+                                <circle cx="12" cy="5" r="2"/>
+                                <path d="M12 7v4"/>
+                                <line x1="8" y1="16" x2="8" y2="16"/>
+                                <line x1="16" y1="16" x2="16" y2="16"/>
+                            </svg>
+                            <span>Automation & Engagement</span>
+                        </div>
+
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#f1c40f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Auto Reacts</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="autoReactsToggle" onchange="handleToggleChange('autoReacts', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M9 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5l-5 5v-5z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Auto Reply (Custom Commands)</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="autoReplyToggle" onchange="handleToggleChange('autoReply', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= 3. INTELLIGENCE & LOOKUPS ================= -->
+                    <div class="feature-category">
+                        <div class="category-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1 0-3.12 3 3 0 0 1 0-4.88 2.5 2.5 0 0 1 0-3.12A2.5 2.5 0 0 1 9.5 2z"/>
+                                <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 0-3.12 3 3 0 0 0 0-4.88 2.5 2.5 0 0 0 0-3.12A2.5 2.5 0 0 0 14.5 2z"/>
+                            </svg>
+                            <span>Intelligence & Lookups</span>
+                        </div>
+
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                            <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Sim Data</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="simDataToggle" onchange="handleToggleChange('simData', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="3" y="4" width="18" height="16" rx="2"/>
+                                            <line x1="7" y1="8" x2="17" y2="8"/>
+                                            <line x1="7" y1="12" x2="17" y2="12"/>
+                                            <line x1="7" y1="16" x2="13" y2="16"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Truecaller Info</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="truecallerToggle" onchange="handleToggleChange('truecaller', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                            <polyline points="17 8 12 3 7 8"/>
+                                            <line x1="12" y1="3" x2="12" y2="15"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Get DP</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="getDpToggle" onchange="handleToggleChange('getDp', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= 4. UTILITY & MEDIA TOOLS ================= -->
+                    <div class="feature-category">
+                        <div class="category-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                            </svg>
+                            <span>Utility & Media Tools</span>
+                        </div>
+
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                            <polyline points="17 8 12 3 7 8"/>
+                                            <line x1="12" y1="3" x2="12" y2="15"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Status Saver</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="statusSaverToggle" onchange="handleToggleChange('statusSaver', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#f1c40f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Bug Protection</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="bugProtectionToggle" onchange="handleToggleChange('bugProtection', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M9 18V5l12-2v13"/>
+                                            <circle cx="6" cy="18" r="3"/>
+                                            <circle cx="18" cy="16" r="3"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">Audio MP3 to OGG</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="audioConverterToggle" onchange="handleToggleChange('audioConverter', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="feature-item">
+                                <div class="feature-left">
+                                    <div class="feature-icon-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                                        </svg>
+                                    </div>
+                                    <span class="feature-name">One Click Block</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="oneClickBlockToggle" onchange="handleToggleChange('oneClickBlock', this)" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- Closes features-container -->
+            </div> <!-- Closes wa-dashboard-card -->
+        </div> <!-- Closes dashboard-tab (active-tab) -->
+
+        <!-- ==================== TAB 2: TUTORIAL (VIDEO PLAYER) ==================== -->
+        <div id="tutorial-tab" class="tab-content">
+            <div class="tutorial-card">
+                <div class="video-terminal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="rgba(0, 229, 255, 0.05)" viewBox="0 0 16 16" style="position: absolute;">
+                        <path d="M0 12V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm6.79-6.907A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z"/>
+                    </svg>
+                    
+                    <div class="video-overlay-glow">
+                        <span class="video-badge">1080P HD</span>
+                        <div class="play-button-neon" onclick="playVideoAlert()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="color: white; font-size: 18px; font-weight: 800; margin-bottom: 5px;">AZAN VIP Exploit Guide</h3>
+                <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 20px;">Watch this walkthrough video to successfully deploy and pair the security terminals.</p>
+
+                <div class="terminal-specs-grid">
+                    <div class="spec-box">
+                        <span>Video Title</span>
+                        <p>Bypassing Secure Ports</p>
+                    </div>
+                    <div class="spec-box">
+                        <span>Duration</span>
+                        <p>04 Mins : 18 Secs</p>
+                    </div>
+                    <div class="spec-box">
+                        <span>Uploaded By</span>
+                        <p>Azan Official Tech</p>
+                    </div>
+                    <div class="spec-box">
+                        <span>Verified Safe</span>
+                        <p style="color: var(--wa-green);">Yes (SSL Encrypted)</p>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- ==================== TAB 3: DOWNLOADS ==================== -->
+        <div id="download-tab" class="tab-content">
+            <div class="download-card">
+                <span class="custom-badge" style="background: rgba(0,229,255,0.1); color: var(--cyber-blue); padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid rgba(0,229,255,0.2);">CLIENT EXECUTABLE</span>
+                
+                <h2 style="color: white; font-size: 26px; margin-top: 15px; font-weight: 800;">GET BOT CLIENT</h2>
+                <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5; margin: 8px 0 20px 0;">Run telemetry client dashboards directly inside your Android system environment smoothly.</p>
+
+                <div class="glowing-core-wrapper">
+                    <div class="pulse-ring"></div>
+                    <div class="core-shield">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="apk-info">
+                    <h3 style="color: white; font-size: 18px; margin: 0; font-weight: 700;">AZAN VIP CLIENT</h3>
+                    <span style="color: var(--wa-green); font-size: 11px; font-weight: bold; letter-spacing: 0.5px;">v2.8.5 - Latest Patch</span>
+                </div>
+
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <span class="spec-label">FILE SIZE</span>
+                        <span class="spec-value">18.42 MB</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">COMPATIBILITY</span>
+                        <span class="spec-value">Android 8.0+</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">SHA-256 HASH</span>
+                        <span class="spec-value" style="font-family: monospace; font-size: 10px;">Verified Stable</span>
+  </div>
+    <div class="spec-item">
+                        <span class="spec-label">SECURITY RATING</span>
+                        <span class="spec-value" style="color: var(--wa-green);">100% Anti-Ban</span>
+                    </div>
+                </div>
+
+                <div class="features-list">
+                    <div class="feature-bullet">
+                        <span class="bullet-check">✓</span>
+                        <span class="bullet-text">High-speed telemetry sync speed</span>
+                    </div>
+                    <div class="feature-bullet">
+                        <span class="bullet-check">✓</span>
+                        <span class="bullet-text">Low background usage active diagnostics</span>
+                    </div>
+                    <div class="feature-bullet">
+                        <span class="bullet-check">✓</span>
+                        <span class="bullet-text">Encrypted dynamic proxy tunnels</span>
+                    </div>
+                </div>
+
+                <button class="download-btn-premium" onclick="window.location.href='#'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                    </svg>
+                    DOWNLOAD MOBILE CLIENT
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 4: NEW VIP PRO SYSTEM (GOLD THEME) ==================== -->
+        <div id="pro-tab" class="tab-content">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <h2 style="color: #ffd700; font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; letter-spacing: 1.5px; text-shadow: 0 0 15px rgba(255,215,0,0.3);">⚡ UPGRADE TO VIP PRO</h2>
+                <p style="color: var(--text-muted); font-size: 13px; font-family: 'Plus Jakarta Sans'; margin-top: 5px;">Unlock ultimate automation, security filters, and premium dedicated servers.</p>
+            </div>
+
+            <div class="pricing-container">
+                
+                <!-- 1. One Monthly Card (Bronze) -->
+                <div class="pro-card">
+                    <span class="plan-badge badge-bronze">BRONZE VIP</span>
+                    <div class="plan-price-box">
+                        <span class="plan-price">300</span>
+                        <span class="plan-currency">PKR</span>
+                        <span class="plan-duration">/ 1 Month</span>
+                    </div>
+                    <ul class="pro-feature-list">
+                        <li class="pro-feature-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Access to all standard VIP mods</span>
+                        </li>
+                        <li class="pro-feature-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Anti-Ban server bypass active</span>
+                        </li>
+                        <li class="pro-feature-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>24/7 Status Seen & Anti-Delete</span>
+                        </li>
+                    </ul>
+                    <button class="btn-buy-pro btn-bronze" onclick="purchasePlan('One Monthly', 300)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/></svg>
+                        ACTIVATE 1 MONTH
+                    </button>
+                </div>
+
+                <!-- 2. Three Monthly Card (Gold - Featured) -->
+                <div class="pro-card featured">
+                    <span class="plan-badge badge-gold">GOLD VIP</span>
+                    <div class="plan-price-box">
+                        <span class="plan-price">1000</span>
+                        <span class="plan-currency">PKR</span>
+                        <span class="plan-duration">/ 3 Months</span>
+                    </div>
+                    <ul class="pro-feature-list">
+                        <li class="pro-feature-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>All Bronze features included</span>
+                        </li>
+                        <li class="pro-feature-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Priority customer support 24/7</span>
+                        </li>
+                        <li class="pro-feature-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Saves 200 PKR on long run</span>
+                        </li>
+                        <li class="pro-feature-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>High-speed proxy tunnel allocation</span>
+                        </li>
+                    </ul>
+                    <button class="btn-buy-pro btn-gold" onclick="purchasePlan('Three Monthly', 1000)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/></svg>
+                        ACTIVATE GOLD 3 MONTHS
+                    </button>
+                </div>
+
+                <!-- 3. One Year Card (Diamond) -->
+                <div class="pro-card">
+                    <span class="plan-badge badge-diamond">INFINITY VIP</span>
+                    <div class="plan-price-box">
+                        <span class="plan-price">3000</span>
+                        <span class="plan-currency">PKR</span>
+                        <span class="plan-duration">/ 1 Year</span>
+                    </div>
+                    <ul class="pro-feature-list">
+                        <li class="pro-feature-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Full Unlocked Access for 365 Days</span>
+                        </li>
+                        <li class="pro-feature-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Zero Ads & 100% Uninterrupted Stream</span>
+                        </li>
+                        <li class="pro-feature-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>VIP Beta feature drops automatically</span>
+                        </li>
+                    </ul>
+                    <button class="btn-buy-pro btn-diamond" onclick="purchasePlan('One Year', 3000)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z"/></svg>
+                        ACTIVATE INFINITY 1 YEAR
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div> <!-- Closes app-container -->
+
+    <!-- ==================== STICKY WHATSAPP CHANNEL BUTTON ==================== -->
+    <div class="sticky-channel-wrapper">
+        <a href="https://whatsapp.com/channel/your-channel-link" target="_blank" class="btn-join-channel">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.69-4.98c-.202-.101-1.192-.588-1.376-.653-.185-.069-.32-.102-.454.101-.133.2-.516.653-.632.78-.117.13-.232.146-.433.045-.201-.102-.85-.313-1.619-.997-.6-.535-1.005-1.199-1.123-1.4-.117-.201-.012-.31.088-.411.09-.09.2-.21.3-.316.099-.105.133-.18.199-.3a.361.361 0 0 0-.018-.34c-.052-.104-.454-1.094-.621-1.496-.164-.398-.331-.345-.454-.351-.118-.006-.254-.007-.39-.007a.752.752 0 0 0-.55.256c-.19.208-.724.708-.724 1.725 0 1.017.74 2.003.842 2.14 1.017 1.34 1.996 2.044 3.415 2.535.741.256 1.37.277 1.882.202.571-.085 1.745-.713 1.993-1.402.247-.69.247-1.282.173-1.402-.073-.12-.27-.187-.472-.29z"/>
+            </svg>
+            FOLLOW OFFICIAL WHATSAPP CHANNEL
+        </a>
+    </div>
+
+    <!-- ==================== NAVIGATION BAR ==================== -->
+    <nav class="bottom-nav">
+        <!-- Dashboard Button -->
+        <button class="nav-item active-nav" onclick="switchTab('dashboard-tab', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; stroke: currentColor; stroke-width: 2;"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+            <span>DASHBOARD</span>
+        </button>
+
+        <!-- Tutorial Button -->
+        <button class="nav-item" onclick="switchTab('tutorial-tab', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; stroke: currentColor; stroke-width: 2;"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+            <span>TUTORIAL</span>
+        </button>
+
+        <!-- Download Button -->
+        <button class="nav-item" onclick="switchTab('download-tab', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; stroke: currentColor; stroke-width: 2;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>DOWNLOAD</span>
+        </button>
+
+        <!-- NEW VIP PRO BUTTON (REPLACED PRIVACY FOR OPTIMAL MOBILE LAYOUT) -->
+        <button class="nav-item" onclick="switchTab('pro-tab', this)" style="color: #ffd700;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg>
+            <span style="font-weight: bold; text-shadow: 0 0 5px rgba(255,215,0,0.3);">VIP PRO</span>
+        </button>
+    </nav>
+
+
+    <!-- ==================== PREMIUM DYNAMIC SCRIPTS ==================== -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        // Admin details for payments (WhatsApp Integration)
+        const ADMIN_WHATSAPP_NUMBER = "923138317139"; // 👈 Bhai yahan apna real WhatsApp number country code ke sath daal dein
+
+        // 🌟 Purchase Click Handler
+        function purchasePlan(planName, price) {
+            // 1. Emit to Backend socket (for stats/auto-generation database tracking)
+            socket.emit('pro-purchase-request', {
+                plan: planName,
+                cost: price
+            });
+
+            // 2. Open WhatsApp Chat with Admin to provide Manual Proof
+            const customMessage = encodeURIComponent(`Bhai, maine aapka bot panel check kiya hai aur main "${planName} VIP Pro (${price} PKR)" wala package activate karwana chahta hoon. Kindly mujhe payment details send karein.`);
+            const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${customMessage}`;
+            
+            // Redirect
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // 🌟 1. Firebase se saved settings automatic page load par sync karna
+        socket.on('load-settings', (savedSettings) => {
+            console.log("Syncing settings from Firebase Cloud:", savedSettings);
+            for (const [feature, isEnabled] of Object.entries(savedSettings)) {
+                const toggleElement = document.getElementById(feature + 'Toggle'); 
+                if (toggleElement) {
+                    toggleElement.checked = isEnabled;
+                }
+            }
+        });
+
+        // 🌟 2. Start Engine using QR Code
+        function startVipEngine() {
+            document.getElementById('streamStatusText').innerText = 'Initializing QR Code Setup...';
+            socket.emit('start-vip-engine');
+        }
+
+        // 🌟 3. Start Engine using Pairing Code
+        function startPairingEngine() {
+            const phone = document.getElementById('waNumberInput').value;
+            if (!phone || phone.length < 10) {
+                alert("Bhai dynamic pairing code ke liye valid phone number (country code ke sath, bina '+') zaroor enter karein!");
+                return;
+            }
+            document.getElementById('streamStatusText').innerText = 'Requesting dynamic secure channel...';
+            socket.emit('start-pairing-engine', { phone: phone });
+        }
+
+        // 🌟 4. Handle Real-time Pairing Code Response
+        socket.on('pairing-code-response', (data) => {
+            const qrContainer = document.querySelector('.qr-placeholder');
+            qrContainer.innerHTML = `
+                <div style="text-align: center; font-family: 'Orbitron', monospace; padding: 15px;">
+                    <p style="color: var(--text-muted); font-size: 10px; margin-bottom: 5px; font-family: 'Plus Jakarta Sans';">ENTER IN WHATSAPP</p>
+                    <h1 style="color: #2ecc71; font-size: 26px; letter-spacing: 4px; font-weight: 900; margin: 10px 0; text-shadow: 0 0 10px rgba(46,204,113,0.3);">${data.code}</h1>
+                    <p style="color: var(--cyber-blue, #00e5ff); font-size: 9px; font-family: 'Plus Jakarta Sans';">Code valid for 2 mins</p>
+                </div>
+            `;
+        });
+
+        // 🌟 5. Dynamic QR Code Handler
+        socket.on('qr-code', (data) => {
+            const qrContainer = document.querySelector('.qr-placeholder');
+            qrContainer.innerHTML = `<img src="${data.image}" alt="WhatsApp QR Code" style="width: 140px; height: 140px; border-radius: 12px; border: 2px solid var(--cyber-blue, #00e5ff); box-shadow: 0 0 15px rgba(0,229,255,0.2);">`;
+        });
+
+        // 🌟 6. Dynamic System Status
+        socket.on('engine-status', (data) => {
+            const statusText = document.getElementById('streamStatusText');
+            statusText.innerText = data.message;
+            statusText.style.color = data.color;
+        });
+
+        // 🌟 7. Toggle Switch Sync to Firebase Handler
+        function handleToggleChange(featureName, checkboxElement) {
+            socket.emit('toggle-feature', {
+                feature: featureName,
+                status: checkboxElement.checked
+            });
+        }
+
+        // 🌟 8. Dynamic Smooth Tab Switcher
+        function switchTab(tabId, navBtn) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active-tab');
+            });
+
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active-nav');
+            });
+
+            document.getElementById(tabId).classList.add('active-tab');
+            navBtn.classList.add('active-nav');
+            
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // 🌟 9. Play Video Alert
+        function playVideoAlert() {
+            alert('Bhai, yahan aap apna premium video player, YouTube frame, ya custom mp4 source link integrate kar sakte hain!');
+        }
+    </script>
+</body>
+                                                            </html>
